@@ -1,0 +1,15 @@
+IVR Dashboard - Windows 10
+==========================
+
+0) Premiere fois: install-all.cmd   (installe Python deps + npm + base de donnees)
+
+1) Double-clic: start-backend.cmd   (garder la fenetre ouverte)
+2) Double-clic: start-frontend.cmd  (garder la fenetre ouverte)
+3) Navigateur: http://localhost:5173  (ou le port affiche par Vite)
+
+Vrais appels SIP UP:
+- Docker Desktop demarre
+- start-sipup-bridge.cmd en plus (3e fenetre)
+- Voir docs\runbooks\client-setup-windows10.md
+
+Installation complete (une fois): docs\runbooks\client-setup-windows10.md
