@@ -1,0 +1,31 @@
+[Unit]
+Description=IVR SIP UP media bridge
+After=network.target docker.service ivr-backend.service
+Requires=docker.service
+
+[Service]
+Type=simple
+User=ivr
+Group=ivr
+SupplementaryGroups=docker
+WorkingDirectory=__REPO_DIR__/backend
+EnvironmentFile=__REPO_DIR__/infra/sipup/.env
+Environment=PYTHONPATH=__REPO_DIR__/backend
+ExecStart=__REPO_DIR__/backend/.venv/bin/python __REPO_DIR__/backend/scripts/run_sip_up_ari_bridge.py
+Restart=on-failure
+RestartSec=10
+
+# Hardening (SEC-4). This service only writes to .local/asterisk-ivr/dyn (synthesized
+# prompt WAVs staged for `docker cp` into the Asterisk container) and the shared
+# .local/tts-cache — it needs no write access to backend/ itself. Docker socket access
+# comes from docker-group membership (SupplementaryGroups=docker), not from running as
+# root; verify on staging before production, since ProtectSystem=strict + a stale group
+# membership is a common source of "docker: permission denied" surprises.
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=__REPO_DIR__/.local
+
+[Install]
+WantedBy=multi-user.target

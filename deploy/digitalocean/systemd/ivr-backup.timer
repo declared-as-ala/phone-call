@@ -1,0 +1,11 @@
+[Unit]
+Description=Run IVR SQLite backup daily
+
+[Timer]
+OnCalendar=*-*-* 02:15:00 UTC
+RandomizedDelaySec=15m
+Persistent=true
+Unit=ivr-backup.service
+
+[Install]
+WantedBy=timers.target
