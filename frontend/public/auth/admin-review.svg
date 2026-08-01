@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 400" fill="none">
+  <rect width="640" height="400" rx="24" fill="#0f172a"/>
+  <circle cx="560" cy="60" r="90" fill="#14b8a6" opacity="0.25"/>
+  <circle cx="80" cy="340" r="70" fill="#6366f1" opacity="0.22"/>
+  <rect x="90" y="70" width="460" height="260" rx="20" fill="#111827" stroke="#334155" stroke-width="2"/>
+  <rect x="110" y="95" width="180" height="14" rx="7" fill="#334155"/>
+  <rect x="110" y="125" width="120" height="10" rx="5" fill="#475569"/>
+  <rect x="110" y="160" width="420" height="72" rx="14" fill="#1e293b" stroke="#14b8a6" stroke-width="2"/>
+  <text x="130" y="205" fill="#99f6e4" font-family="ui-monospace,monospace" font-size="28" font-weight="700">""""""</text>
+  <rect x="110" y="255" width="130" height="44" rx="12" fill="#059669"/>
+  <text x="175" y="284" text-anchor="middle" fill="white" font-family="system-ui,sans-serif" font-size="16" font-weight="700">Accept</text>
+  <rect x="260" y="255" width="130" height="44" rx="12" fill="#334155" stroke="#64748b"/>
+  <text x="325" y="284" text-anchor="middle" fill="#e2e8f0" font-family="system-ui,sans-serif" font-size="16" font-weight="700">Deny</text>
+  <circle cx="520" cy="120" r="28" fill="#312e81" stroke="#818cf8" stroke-width="2"/>
+  <path d="M508 120l8 8 16-16" stroke="#a5b4fc" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

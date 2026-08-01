@@ -1,0 +1,18 @@
+[Unit]
+Description=IVR SQLite online backup
+After=local-fs.target
+
+[Service]
+Type=oneshot
+User=ivr
+Group=ivr
+WorkingDirectory=__REPO_DIR__
+EnvironmentFile=__REPO_DIR__/backend/.env
+Environment=PYTHON_BIN=__REPO_DIR__/backend/.venv/bin/python
+ExecStart=/usr/bin/bash __REPO_DIR__/scripts/backup_sqlite.sh --database __REPO_DIR__/backend/ivr_verification.db --output-dir __REPO_DIR__/.local/backups --retention-days 14
+
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=__REPO_DIR__/.local/backups

@@ -1,0 +1,305 @@
+# =============================================================================
+# IVR Verification Dashboard — complete project dependency manifest (repo root)
+# Updated: 2026-05-29
+# =============================================================================
+#
+# This file lists ALL dependencies for the whole project (backend, frontend, infra).
+#
+# SYSTEM PREREQUISITES (install separately):
+#   - Python 3.9+ (3.10 or 3.11 recommended)
+#   - Node.js 18+ and npm
+#   - Docker Desktop / Docker Compose v2 (Asterisk SIP lab)
+#   - ffmpeg on PATH (LuvVoice TTS → Asterisk WAV)
+#   - Git (optional)
+#
+# ONE-COMMAND INSTALL (after unzip; needs Python 3.9+ and Node 18+ on PATH):
+#   Mac / Linux / Git Bash on Windows:
+#     bash scripts/install-all.sh
+#   Windows 10 (double-click or cmd):
+#     scripts\windows\install-all.cmd
+#
+# Then create admin (once):
+#   cd backend && .venv\Scripts\activate  (Windows)
+#   python scripts/create_admin.py --email YOU --password "YourPass123!"
+#
+# Pip packages only (backend venv):
+#   cd backend && pip install -r requirements.txt
+#
+# Frontend only:
+#   cd frontend && npm install
+#
+# Asterisk lab (real calls only):
+#   cd infra/sipup && docker compose up -d
+#
+# NOTE: Sections below mix pip pins, npm lock versions, Docker, and IDE extensions.
+#       pip install -r requirements.txt will FAIL on npm/@ lines — use sections as documented.
+#
+# =============================================================================
+# PYTHON — direct runtime dependencies (backend app + Alembic + pytest)
+# =============================================================================
+
+fastapi==0.128.8
+uvicorn[standard]==0.39.0
+sqlalchemy==2.0.49
+alembic==1.16.5
+pydantic==2.13.4
+python-multipart==0.0.20
+bcrypt==5.0.0
+cryptography==48.0.0
+httpx==0.28.1
+websockets==15.0.1
+pytest==8.4.2
+python-dotenv==1.2.1
+
+# =============================================================================
+# PYTHON — full resolved tree (pip freeze from backend/.venv)
+# =============================================================================
+
+Mako==1.3.12
+MarkupSafe==3.0.3
+PyYAML==6.0.3
+Pygments==2.20.0
+SQLAlchemy==2.0.49
+alembic==1.16.5
+annotated-doc==0.0.4
+annotated-types==0.7.0
+anyio==4.12.1
+bcrypt==5.0.0
+certifi==2026.5.20
+cffi==2.0.0
+click==8.1.8
+cryptography==48.0.0
+exceptiongroup==1.3.1
+fastapi==0.128.8
+h11==0.16.0
+httpcore==1.0.9
+httptools==0.7.1
+httpx==0.28.1
+idna==3.15
+iniconfig==2.1.0
+packaging==26.2
+pluggy==1.6.0
+pycparser==2.23
+pydantic==2.13.4
+pydantic_core==2.46.4
+pytest==8.4.2
+python-dotenv==1.2.1
+python-multipart==0.0.20
+starlette==0.49.3
+tomli==2.4.1
+typing-inspection==0.4.2
+typing_extensions==4.15.0
+uvicorn==0.39.0
+uvloop==0.22.1
+watchfiles==1.1.1
+websockets==15.0.1
+
+# =============================================================================
+# NODE.JS — direct frontend dependencies (frontend/package.json)
+# =============================================================================
+
+react@18.3.1
+react-dom@18.3.1
+@vitejs/plugin-react@4.7.0
+autoprefixer@10.5.0
+postcss@8.5.14
+tailwindcss@3.4.19
+vite@5.4.21
+
+# =============================================================================
+# NODE.JS — full lockfile tree (frontend/package-lock.json)
+# Reproduce exactly: cd frontend && npm ci
+# =============================================================================
+
+@alloc/quick-lru@5.2.0
+@babel/code-frame@7.29.0
+@babel/compat-data@7.29.3
+@babel/core@7.29.0
+@babel/generator@7.29.1
+@babel/helper-compilation-targets@7.28.6
+@babel/helper-globals@7.28.0
+@babel/helper-module-imports@7.28.6
+@babel/helper-module-transforms@7.28.6
+@babel/helper-plugin-utils@7.28.6
+@babel/helper-string-parser@7.27.1
+@babel/helper-validator-identifier@7.28.5
+@babel/helper-validator-option@7.27.1
+@babel/helpers@7.29.2
+@babel/parser@7.29.3
+@babel/plugin-transform-react-jsx-self@7.27.1
+@babel/plugin-transform-react-jsx-source@7.27.1
+@babel/template@7.28.6
+@babel/traverse@7.29.0
+@babel/types@7.29.0
+@esbuild/aix-ppc64@0.21.5
+@esbuild/android-arm64@0.21.5
+@esbuild/android-arm@0.21.5
+@esbuild/android-x64@0.21.5
+@esbuild/darwin-arm64@0.21.5
+@esbuild/darwin-x64@0.21.5
+@esbuild/freebsd-arm64@0.21.5
+@esbuild/freebsd-x64@0.21.5
+@esbuild/linux-arm64@0.21.5
+@esbuild/linux-arm@0.21.5
+@esbuild/linux-ia32@0.21.5
+@esbuild/linux-loong64@0.21.5
+@esbuild/linux-mips64el@0.21.5
+@esbuild/linux-ppc64@0.21.5
+@esbuild/linux-riscv64@0.21.5
+@esbuild/linux-s390x@0.21.5
+@esbuild/linux-x64@0.21.5
+@esbuild/netbsd-x64@0.21.5
+@esbuild/openbsd-x64@0.21.5
+@esbuild/sunos-x64@0.21.5
+@esbuild/win32-arm64@0.21.5
+@esbuild/win32-ia32@0.21.5
+@esbuild/win32-x64@0.21.5
+@jridgewell/gen-mapping@0.3.13
+@jridgewell/remapping@2.3.5
+@jridgewell/resolve-uri@3.1.2
+@jridgewell/sourcemap-codec@1.5.5
+@jridgewell/trace-mapping@0.3.31
+@nodelib/fs.scandir@2.1.5
+@nodelib/fs.stat@2.0.5
+@nodelib/fs.walk@1.2.8
+@rolldown/pluginutils@1.0.0-beta.27
+@rollup/rollup-android-arm-eabi@4.60.3
+@rollup/rollup-android-arm64@4.60.3
+@rollup/rollup-darwin-arm64@4.60.3
+@rollup/rollup-darwin-x64@4.60.3
+@rollup/rollup-freebsd-arm64@4.60.3
+@rollup/rollup-freebsd-x64@4.60.3
+@rollup/rollup-linux-arm-gnueabihf@4.60.3
+@rollup/rollup-linux-arm-musleabihf@4.60.3
+@rollup/rollup-linux-arm64-gnu@4.60.3
+@rollup/rollup-linux-arm64-musl@4.60.3
+@rollup/rollup-linux-loong64-gnu@4.60.3
+@rollup/rollup-linux-loong64-musl@4.60.3
+@rollup/rollup-linux-ppc64-gnu@4.60.3
+@rollup/rollup-linux-ppc64-musl@4.60.3
+@rollup/rollup-linux-riscv64-gnu@4.60.3
+@rollup/rollup-linux-riscv64-musl@4.60.3
+@rollup/rollup-linux-s390x-gnu@4.60.3
+@rollup/rollup-linux-x64-gnu@4.60.3
+@rollup/rollup-linux-x64-musl@4.60.3
+@rollup/rollup-openbsd-x64@4.60.3
+@rollup/rollup-openharmony-arm64@4.60.3
+@rollup/rollup-win32-arm64-msvc@4.60.3
+@rollup/rollup-win32-ia32-msvc@4.60.3
+@rollup/rollup-win32-x64-gnu@4.60.3
+@rollup/rollup-win32-x64-msvc@4.60.3
+@types/babel__core@7.20.5
+@types/babel__generator@7.27.0
+@types/babel__template@7.4.4
+@types/babel__traverse@7.28.0
+@types/estree@1.0.8
+@vitejs/plugin-react@4.7.0
+any-promise@1.3.0
+anymatch@3.1.3
+arg@5.0.2
+autoprefixer@10.5.0
+baseline-browser-mapping@2.10.27
+binary-extensions@2.3.0
+braces@3.0.3
+browserslist@4.28.2
+camelcase-css@2.0.1
+caniuse-lite@1.0.30001792
+chokidar/glob-parent@5.1.2
+chokidar@3.6.0
+commander@4.1.1
+convert-source-map@2.0.0
+cssesc@3.0.0
+debug@4.4.3
+didyoumean@1.2.2
+dlv@1.1.3
+electron-to-chromium@1.5.351
+es-errors@1.3.0
+esbuild@0.21.5
+escalade@3.2.0
+fast-glob/glob-parent@5.1.2
+fast-glob@3.3.3
+fastq@1.20.1
+fill-range@7.1.1
+fraction.js@5.3.4
+fsevents@2.3.3
+function-bind@1.1.2
+gensync@1.0.0-beta.2
+glob-parent@6.0.2
+hasown@2.0.3
+is-binary-path@2.1.0
+is-core-module@2.16.2
+is-extglob@2.1.1
+is-glob@4.0.3
+is-number@7.0.0
+jiti@1.21.7
+js-tokens@4.0.0
+jsesc@3.1.0
+json5@2.2.3
+lilconfig@3.1.3
+lines-and-columns@1.2.4
+loose-envify@1.4.0
+lru-cache@5.1.1
+merge2@1.4.1
+micromatch@4.0.8
+ms@2.1.3
+mz@2.7.0
+nanoid@3.3.12
+node-releases@2.0.38
+normalize-path@3.0.0
+object-assign@4.1.1
+object-hash@3.0.0
+path-parse@1.0.7
+picocolors@1.1.1
+picomatch@2.3.2
+pify@2.3.0
+pirates@4.0.7
+postcss-import@15.1.0
+postcss-js@4.1.0
+postcss-load-config@6.0.1
+postcss-nested@6.2.0
+postcss-selector-parser@6.1.2
+postcss-value-parser@4.2.0
+postcss@8.5.14
+queue-microtask@1.2.3
+react-dom@18.3.1
+react-refresh@0.17.0
+react@18.3.1
+read-cache@1.0.0
+readdirp@3.6.0
+resolve@1.22.12
+reusify@1.1.0
+rollup@4.60.3
+run-parallel@1.2.0
+scheduler@0.23.2
+semver@6.3.1
+source-map-js@1.2.1
+sucrase@3.35.1
+supports-preserve-symlinks-flag@1.0.0
+tailwindcss@3.4.19
+thenify-all@1.6.0
+thenify@3.3.1
+tinyglobby/fdir@6.5.0
+tinyglobby/picomatch@4.0.4
+tinyglobby@0.2.16
+to-regex-range@5.0.1
+ts-interface-checker@0.1.13
+update-browserslist-db@1.2.3
+util-deprecate@1.0.2
+vite@5.4.21
+yallist@3.1.1
+
+# =============================================================================
+# DOCKER / INFRASTRUCTURE
+# =============================================================================
+mlan/asterisk:latest  # infra/asterisk/docker-compose.yml
+
+# =============================================================================
+# RECOMMENDED VS CODE / CURSOR EXTENSIONS (optional)
+# =============================================================================
+ms-python.python
+ms-python.vscode-pylance
+charliermarsh.ruff
+dbaeumer.vscode-eslint
+esbenp.prettier-vscode
+bradlc.vscode-tailwindcss
+ms-azuretools.vscode-docker

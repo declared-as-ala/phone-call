@@ -1,0 +1,27 @@
+[Unit]
+Description=IVR Verification FastAPI backend
+After=network.target docker.service
+Wants=docker.service
+
+[Service]
+Type=simple
+User=ivr
+Group=ivr
+WorkingDirectory=__REPO_DIR__/backend
+EnvironmentFile=__REPO_DIR__/backend/.env
+Environment=PYTHONPATH=__REPO_DIR__/backend
+ExecStart=__REPO_DIR__/backend/.venv/bin/uvicorn app.main:app --host 127.0.0.1 --port 8000
+Restart=on-failure
+RestartSec=5
+
+# Hardening (SEC-4). Only backend/ (SQLite DB + .local/sip_up_account.json) and
+# .local/tts-cache (shared LuvVoice cache) are ever written to by this service —
+# everything else stays read-only under ProtectSystem=strict.
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=__REPO_DIR__/backend __REPO_DIR__/.local
+
+[Install]
+WantedBy=multi-user.target

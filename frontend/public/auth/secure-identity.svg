@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 400" fill="none">
+  <rect width="640" height="400" rx="24" fill="#134e4a"/>
+  <circle cx="520" cy="300" r="100" fill="#2dd4bf" opacity="0.2"/>
+  <circle cx="120" cy="100" r="80" fill="#6366f1" opacity="0.25"/>
+  <path d="M320 70l140 50v90c0 78-62 142-140 160-78-18-140-82-140-160v-90l140-50z" fill="#042f2e" stroke="#5eead4" stroke-width="4"/>
+  <path d="M260 205l36 36 84-84" stroke="#99f6e4" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="180" y="290" width="280" height="56" rx="16" fill="#0f766e" stroke="#5eead4" stroke-width="2"/>
+  <text x="320" y="326" text-anchor="middle" fill="#ecfdf5" font-family="system-ui,sans-serif" font-size="18" font-weight="700">Verified identity</text>
+</svg>

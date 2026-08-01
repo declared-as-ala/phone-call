@@ -1,0 +1,11 @@
+# Generated local configs — never commit credentials
+
+config/asterisk.conf
+config/pjsip.conf
+config/extensions.conf
+config/ari.conf
+config/http.conf
+config/modules.conf
+config/manager.conf
+config/rtp.conf
+!config/*.example

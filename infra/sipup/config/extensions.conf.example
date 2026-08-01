@@ -1,0 +1,56 @@
+; Copy to extensions.conf
+; Context must match PJSIP endpoint context (ivr-local-dev or ivr-outbound).
+; Use environment-specific docs to map ASTERISK_CONTEXT to this name.
+
+[general]
+static = yes
+writeprotect = no
+clearglobalvars = no
+
+[globals]
+; Real deployments: Set(__CALL_ID__) from ARI on StasisStart (UUID from your backend).
+CALL_ID=
+NARAYANA_DIAL_PREFIX=
+NARAYANA_TRUNK=narayana-trunk
+
+[default]
+exten => _X.,1,NoOp(Unmatched)
+ same => n,Hangup()
+
+; ---------------------------------------------------------------------------
+; Local dev: answer → consent placeholder → collect DTMF → (optionally) HTTP POST.
+; The backend expects JSON at POST /api/telephony/events — Asterisk dialplan cannot
+; POST JSON natively without func_curl/AGI; use the README curl examples or an ARI app.
+; ---------------------------------------------------------------------------
+[ivr-local-dev]
+exten => 100,1,NoOp(Local IVR placeholder — dial this extension from registered softphone)
+ same => n,Answer()
+ ; Consent stand-in — replace with Playback(your-consent-prompt) once file is in sounds/
+ same => n,Playback(beep)
+ ; Collect single digit for consent (1 accept / 2 decline pattern)
+ same => n,Read(CONSENT,silence/1,1)
+ same => n,NoOp(Consent digit: ${CONSENT} — send via ARI or curl; see README)
+; Collect up to 6 digits for official verification code (single Read; webhook expects per-digit optional)
+ same => n,Read(CODE,silence/1,6)
+ same => n,NoOp(Code buffer: ${CODE} — split into 6x DTMF POSTs or extend backend)
+ same => n,Playback(beep)
+ same => n,Hangup()
+
+exten => s,1,Goto(ivr-local-dev,100,1)
+
+; ---------------------------------------------------------------------------
+; Real outbound provider example: originate/dial through Narayana trunk.
+; Set ASTERISK_CONTEXT=ivr-outbound for provider-backed test calls.
+; Use only test numbers until Narayana registration, caller ID, audio, and DTMF
+; are verified. The backend still owns consent, code entry, and admin approval.
+; ---------------------------------------------------------------------------
+[ivr-outbound]
+exten => _+X.,1,NoOp(Outbound Narayana call to ${EXTEN} for backend call ${CALL_ID})
+ same => n,Dial(PJSIP/${NARAYANA_DIAL_PREFIX}${EXTEN}@${NARAYANA_TRUNK},60)
+ same => n,NoOp(Narayana dial status: ${DIALSTATUS})
+ same => n,Hangup()
+
+exten => _X.,1,NoOp(Outbound Narayana call to ${EXTEN} for backend call ${CALL_ID})
+ same => n,Dial(PJSIP/${NARAYANA_DIAL_PREFIX}${EXTEN}@${NARAYANA_TRUNK},60)
+ same => n,NoOp(Narayana dial status: ${DIALSTATUS})
+ same => n,Hangup()
