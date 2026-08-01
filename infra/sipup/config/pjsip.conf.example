@@ -1,0 +1,141 @@
+; Copy to pjsip.conf — PJSIP transport + softphone endpoint.
+; Replace REPLACE_* placeholders and secrets before use. Do not commit real credentials.
+;
+; Suggested env mapping (document in your secrets store, not in git):
+;   ASTERISK_SIP_DOMAIN      — often your LAN IP or "sip_up" docker hostname for LAN-only
+;   ASTERISK_ENDPOINT        — logical name, e.g. softphone1
+;   ASTERISK_SIP_USER        — SIP auth username
+;   ASTERISK_SIP_PASSWORD    — SIP password (strong random)
+;
+; Optional generic SIP provider / Narayana trunk placeholders:
+;   NARAYANA_SIP_DOMAIN=rdx.narayana.im
+;   NARAYANA_SIP_USERNAME=372810444412235
+;   NARAYANA_SIP_PASSWORD=
+;   NARAYANA_SIP_PORT=5061
+;   NARAYANA_SIP_TRANSPORT=tls
+;   NARAYANA_DTMF_MODE=rfc4733
+;   NARAYANA_OUTBOUND_CALLER_ID=18009359935
+;   NARAYANA_DIAL_PREFIX=
+;   Observed Narayana UI shows Encryption: DTLS-SRTP and IP Auth: 192.168.1.1.
+;   PIN Code exists in the UI, but do not use it as SIP password unless Narayana confirms.
+;   TLS 5061 is the recommended default attempt. DTLS-SRTP/WebRTC encryption may
+;   require additional Asterisk TLS/SRTP or WebRTC endpoint configuration beyond
+;   this basic SIP TLS registration template.
+;
+; Asterisk does not read this .example file directly. Copy it to pjsip.conf
+; and render ${...} placeholders from your local .env/secrets store, for example
+; with envsubst. Never commit the rendered pjsip.conf if it contains secrets.
+
+[global]
+type = global
+user_agent = Asterisk-IVR-Dev
+
+[transport-udp]
+type = transport
+protocol = udp
+bind = 0.0.0.0:5060
+; If softphone is on another host behind NAT, you may need external_media_address / external_signaling_address
+; external_media_address = YOUR_PUBLIC_OR_LAN_IP
+; external_signaling_address = YOUR_PUBLIC_OR_LAN_IP
+
+[transport-tcp]
+type = transport
+protocol = tcp
+bind = 0.0.0.0:5060
+
+[transport-tls]
+type = transport
+protocol = tls
+bind = 0.0.0.0:5061
+method = tlsv1_2
+verify_server = no
+verify_client = no
+; If Narayana requires certificate validation or mutual TLS, provide these in the
+; uncommitted local pjsip.conf and mount the certificate files into the container:
+; ca_list_file = /etc/asterisk/keys/ca.pem
+; cert_file = /etc/asterisk/keys/asterisk.pem
+; priv_key_file = /etc/asterisk/keys/asterisk.key
+; DTLS-SRTP/WebRTC note: If Narayana's DTLS-SRTP setting means WebRTC-only media,
+; this SIP TLS transport is not enough. Confirm whether Asterisk should use SIP
+; TLS/SRTP, or a WebRTC endpoint with DTLS-SRTP/ICE-specific configuration.
+
+; --- Softphone registration (Zoiper / Linphone) ----------------------------
+
+[softphone-auth]
+type = auth
+auth_type = userpass
+password = REPLACE_SIP_PASSWORD
+username = REPLACE_SIP_USER
+
+[softphone-aor]
+type = aor
+max_contacts = 1
+remove_existing = yes
+
+[softphone-endpoint]
+type = endpoint
+context = ivr-local-dev
+disallow = all
+allow = ulaw,alaw,g722
+auth = softphone-auth
+aors = softphone-aor
+direct_media = no
+rtp_symmetric = yes
+force_rport = yes
+rewrite_contact = yes
+dtmf_mode = rfc4733
+; Optional: tie ARI channel variables to your app call_id via Stasis — see README.
+
+; --- Generic outbound SIP provider trunk (Narayana example) -----------------
+; Render these ${NARAYANA_*} placeholders locally before starting Asterisk.
+; Keep the provider password only in .env / secret manager, not in git.
+;
+; Example outbound dial target from ARI/dialplan:
+;   PJSIP/${NARAYANA_DIAL_PREFIX}<destination_e164>@narayana-trunk
+; Leave NARAYANA_DIAL_PREFIX blank unless Narayana requires a prefix.
+
+[narayana-auth]
+type = auth
+auth_type = userpass
+username = ${NARAYANA_SIP_USERNAME}
+password = ${NARAYANA_SIP_PASSWORD}
+
+[narayana-aor]
+type = aor
+contact = sip:${NARAYANA_SIP_DOMAIN}:${NARAYANA_SIP_PORT}
+
+[narayana-registration]
+type = registration
+transport = transport-${NARAYANA_SIP_TRANSPORT}
+outbound_auth = narayana-auth
+server_uri = sip:${NARAYANA_SIP_DOMAIN}:${NARAYANA_SIP_PORT}
+client_uri = sip:${NARAYANA_SIP_USERNAME}@${NARAYANA_SIP_DOMAIN}
+contact_user = ${NARAYANA_SIP_USERNAME}
+retry_interval = 60
+forbidden_retry_interval = 300
+expiration = 3600
+
+; Optional. Keep this block only if Narayana sends inbound traffic from a stable
+; signaling IP/domain that Asterisk can match. Otherwise remove it locally.
+[narayana-identify]
+type = identify
+endpoint = narayana-trunk
+match = ${NARAYANA_SIP_DOMAIN}
+
+[narayana-trunk]
+type = endpoint
+transport = transport-${NARAYANA_SIP_TRANSPORT}
+context = ivr-outbound
+disallow = all
+allow = ulaw,alaw
+aors = narayana-aor
+outbound_auth = narayana-auth
+from_domain = ${NARAYANA_SIP_DOMAIN}
+from_user = ${NARAYANA_OUTBOUND_CALLER_ID}
+dtmf_mode = ${NARAYANA_DTMF_MODE}
+direct_media = no
+rtp_symmetric = yes
+force_rport = yes
+rewrite_contact = yes
+trust_id_inbound = yes
+send_pai = yes
