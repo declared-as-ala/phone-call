@@ -1,0 +1,63 @@
+# Local Asterisk for SIP + ARI development. Does not replace MockTelephonyProvider.
+#
+# Usage:
+#   cd infra/sipup
+#   cp .env.example .env          # fill SIPUP_* and NARAYANA_* secrets
+#   cp config/*.example config/   # first-time only (see README)
+#   docker compose up -d            # auto-renders config/pjsip.conf via pjsip-render
+#
+# SIP UP (default trunk): set SIPUP_SIP_DOMAIN / SIPUP_SIP_USERNAME / SIPUP_SIP_PASSWORD
+# in .env — see .env.example. Backend uses SIPUP_PJSIP_ENDPOINT=sip-up-trunk.
+
+services:
+  pjsip-render:
+    image: mlan/asterisk:latest
+    working_dir: /work
+    volumes:
+      - .:/work
+    entrypoint: ["/bin/sh", "/work/scripts/render_pjsip_from_env.sh"]
+    restart: "no"
+
+  asterisk:
+    # Pin a tag in production; `docker pull mlan/asterisk` to refresh locally.
+    image: mlan/asterisk:latest
+    container_name: ivr-asterisk-dev
+    hostname: asterisk
+    privileged: true
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    restart: unless-stopped
+    depends_on:
+      pjsip-render:
+        condition: service_completed_successfully
+    ports:
+      - "${ASTERISK_SIP_BIND:-5060}:5060/udp"
+      - "${ASTERISK_SIP_TCP_BIND:-5060}:5060/tcp"
+      - "${ASTERISK_SIP_TLS_BIND:-5061}:5061/tcp"
+      - "${ASTERISK_HTTP_BIND:-8088}:8088/tcp"
+      # Narrow RTP range for local dev; widen if concurrent calls or codec issues.
+      - "${ASTERISK_RTP_START:-10000}-${ASTERISK_RTP_END:-10100}:10000-10100/udp"
+    volumes:
+      - ./config:/etc/asterisk:ro
+      - asterisk-sounds:/var/lib/asterisk/sounds
+      # Host bind-mount: TTS WAVs + static IVR clips visible without docker cp.
+      - ../../.local/asterisk-ivr:/var/lib/asterisk/sounds/ivr
+      - asterisk-spool:/var/spool/asterisk
+    environment:
+      # Documentary only — Asterisk reads config files, not these vars directly.
+      # Use the same values in your copied ari.conf / rendered pjsip.conf.
+      ASTERISK_ARI_USER: ${ASTERISK_ARI_USER:-change-me-ari-user}
+      ASTERISK_ARI_PASSWORD: ${ASTERISK_ARI_PASSWORD:-change-me-ari-password}
+      # SIP UP trunk (rendered into pjsip.conf by pjsip-render)
+      SIPUP_SIP_DOMAIN: ${SIPUP_SIP_DOMAIN:-sip.sipup.org}
+      SIPUP_SIP_HOST: ${SIPUP_SIP_HOST:-}
+      SIPUP_SIP_PORT: ${SIPUP_SIP_PORT:-5060}
+      SIPUP_PJSIP_ENDPOINT: ${SIPUP_PJSIP_ENDPOINT:-sip-up-trunk}
+    extra_hosts:
+      # Allows dialplan/System(curl) or sidecars to reach the API on the host.
+      - "host.docker.internal:host-gateway"
+
+volumes:
+  asterisk-sounds:
+  asterisk-spool:

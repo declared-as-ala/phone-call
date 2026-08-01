@@ -1,0 +1,25 @@
+# Pip-installable Python pins for backend venv and deploy scripts.
+# Full project manifest (Python + Node + Docker + IDE): ../requirements.txt
+#
+#   cd backend && pip install -r requirements.txt
+
+fastapi==0.128.8
+uvicorn[standard]==0.39.0
+sqlalchemy==2.0.49
+alembic==1.16.5
+
+pydantic==2.13.4
+python-multipart==0.0.20
+
+bcrypt==5.0.0
+cryptography==48.0.0
+
+httpx==0.28.1
+websockets==15.0.1
+
+pytest==8.4.2
+
+python-dotenv==1.2.1
+
+# Bundled ffmpeg for LuvVoice MP3 → Asterisk 8 kHz WAV (no system ffmpeg required)
+imageio-ffmpeg==0.6.0

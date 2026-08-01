@@ -1,0 +1,8 @@
+; Copy to modules.conf if the container image does not autoload ARI/PJSIP.
+; The mlan/asterisk image typically autoloads; you can start with:
+
+[modules]
+autoload = yes
+
+; If ARI or PJSIP fails to register, uncomment specific preloads after checking
+; `asterisk -rx "module show like ari"` inside the container.

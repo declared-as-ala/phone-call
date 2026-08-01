@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 400" fill="none">
+  <rect width="640" height="400" rx="24" fill="#1e1b4b"/>
+  <circle cx="500" cy="320" r="110" fill="#4338ca" opacity="0.35"/>
+  <circle cx="100" cy="90" r="80" fill="#0d9488" opacity="0.3"/>
+  <rect x="170" y="70" width="300" height="260" rx="28" fill="#312e81" stroke="#818cf8" stroke-width="3"/>
+  <g fill="#c7d2fe">
+    <circle cx="230" cy="130" r="24"/><circle cx="320" cy="130" r="24"/><circle cx="410" cy="130" r="24"/>
+    <circle cx="230" cy="200" r="24"/><circle cx="320" cy="200" r="24"/><circle cx="410" cy="200" r="24"/>
+    <circle cx="230" cy="270" r="24"/><circle cx="320" cy="270" r="24"/><circle cx="410" cy="270" r="24"/>
+  </g>
+  <text x="230" y="138" text-anchor="middle" fill="#1e1b4b" font-family="system-ui,sans-serif" font-size="22" font-weight="700">1</text>
+  <text x="320" y="138" text-anchor="middle" fill="#1e1b4b" font-family="system-ui,sans-serif" font-size="22" font-weight="700">2</text>
+  <text x="410" y="138" text-anchor="middle" fill="#1e1b4b" font-family="system-ui,sans-serif" font-size="22" font-weight="700">3</text>
+  <text x="230" y="208" text-anchor="middle" fill="#1e1b4b" font-family="system-ui,sans-serif" font-size="22" font-weight="700">4</text>
+  <text x="320" y="208" text-anchor="middle" fill="#1e1b4b" font-family="system-ui,sans-serif" font-size="22" font-weight="700">5</text>
+  <text x="410" y="208" text-anchor="middle" fill="#1e1b4b" font-family="system-ui,sans-serif" font-size="22" font-weight="700">6</text>
+  <text x="230" y="278" text-anchor="middle" fill="#1e1b4b" font-family="system-ui,sans-serif" font-size="22" font-weight="700">7</text>
+  <text x="320" y="278" text-anchor="middle" fill="#1e1b4b" font-family="system-ui,sans-serif" font-size="22" font-weight="700">8</text>
+  <text x="410" y="278" text-anchor="middle" fill="#1e1b4b" font-family="system-ui,sans-serif" font-size="22" font-weight="700">#</text>
+  <rect x="470" y="120" width="120" height="36" rx="18" fill="#14b8a6"/>
+  <text x="530" y="144" text-anchor="middle" fill="#042f2e" font-family="system-ui,sans-serif" font-size="16" font-weight="700">6 digits</text>
+</svg>

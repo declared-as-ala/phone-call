@@ -1,0 +1,15 @@
+; OPTIONAL — AMI instead of/in addition to ARI.
+; Copy to manager.conf only if you use AMI-based tooling.
+; Never commit real secrets.
+
+[general]
+enabled = no
+port = 5038
+bindaddr = 127.0.0.1
+
+[ami-dev-user]
+secret = REPLACE_WITH_STRONG_RANDOM_SECRET
+deny = 0.0.0.0/0.0.0.0
+permit = 127.0.0.1/255.255.255.255
+read = system,call,log,verbose,command,agent,user,config,dtmf,reporting,cdr,dialplan
+write = system,call,log,verbose,command,agent,user,config,dtmf,reporting,cdr,dialplan
