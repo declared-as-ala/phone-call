@@ -1,0 +1,16 @@
+; Copy to ari.conf — ARI credentials (use strong random values; never commit real secrets).
+; Map these to your app env: ASTERISK_ARI_USER, ASTERISK_ARI_PASSWORD, ASTERISK_ARI_PORT, etc.
+
+[general]
+enabled = yes
+pretty = yes
+; For local dev only — tighten in shared networks
+allowed_origins = *
+
+; User block name becomes the HTTP basic auth username.
+; Replace BOTH the section name and password before use.
+[ari-dev-user]
+type = user
+read_only = no
+password_format = plain
+password = REPLACE_WITH_STRONG_RANDOM_PASSWORD

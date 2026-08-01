@@ -1,0 +1,37 @@
+# Operating system and local tooling
+.DS_Store
+.local/
+..local/
+.brv/
+
+# Secrets and environment overrides (examples remain tracked)
+.env
+.env.*
+!.env.example
+!**/.env.example
+*.pem
+*.key
+
+# Python
+backend/.venv/
+**/__pycache__/
+**/.pytest_cache/
+*.py[cod]
+
+# Node/Vite
+frontend/node_modules/
+frontend/dist/
+
+# Runtime data and logs
+*.db
+*.db-*
+*.sqlite
+*.sqlite3
+*.log
+
+# Temporary files
+*.tmp
+*.bak
+branch_structure.json
+temp_auto_push.bat
+temp_interactive_push.bat

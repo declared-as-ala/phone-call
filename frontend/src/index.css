@@ -1,0 +1,140 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --surface-base: 248 250 252;
+    --surface-elevated: 255 255 255;
+    --surface-muted: 241 245 249;
+    --ink-primary: 15 23 42;
+    --ink-secondary: 71 85 105;
+    --ink-muted: 100 116 139;
+    --accent: 13 148 136;
+    --accent-strong: 15 118 110;
+    --accent-soft: 204 251 241;
+    --brand-indigo: 79 70 229;
+    --brand-glow: 99 102 241;
+    --border-soft: 226 232 240;
+    --border-strong: 203 213 225;
+    --shadow-soft: 0 1px 2px rgb(15 23 42 / 0.04), 0 8px 24px -12px rgb(15 23 42 / 0.12);
+    --shadow-card: 0 1px 2px rgb(15 23 42 / 0.05), 0 12px 32px -16px rgb(15 23 42 / 0.18);
+    --radius-card: 1.25rem;
+  }
+
+  html {
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    scroll-behavior: smooth;
+  }
+
+  body {
+    margin: 0;
+    @apply antialiased text-slate-900;
+    background:
+      radial-gradient(circle at 0% 0%, rgb(204 251 241 / 0.45), transparent 32%),
+      radial-gradient(circle at 100% 0%, rgb(224 231 255 / 0.55), transparent 28%),
+      radial-gradient(circle at 50% 100%, rgb(241 245 249 / 0.9), transparent 40%),
+      rgb(var(--surface-base));
+    min-height: 100vh;
+  }
+
+  ::selection {
+    background: rgb(var(--accent-soft));
+    color: rgb(var(--accent-strong));
+  }
+}
+
+@layer components {
+  .app-shell {
+    @apply min-h-screen;
+  }
+
+  .app-header {
+    @apply border-b border-white/10 bg-slate-950/95 text-white backdrop-blur-xl;
+    box-shadow: 0 1px 0 rgb(255 255 255 / 0.04), 0 12px 40px -24px rgb(15 23 42 / 0.55);
+  }
+
+  .app-card {
+    @apply rounded-[var(--radius-card)] border border-slate-200/80 bg-white/90 backdrop-blur-sm;
+    box-shadow: var(--shadow-card);
+  }
+
+  .app-card-interactive {
+    @apply app-card transition duration-200 hover:border-teal-200/80 hover:shadow-lg;
+  }
+
+  .app-eyebrow {
+    @apply text-[11px] font-semibold uppercase tracking-[0.18em] text-teal-600;
+  }
+
+  .app-gradient-text {
+    @apply bg-gradient-to-r from-teal-600 via-teal-500 to-indigo-500 bg-clip-text text-transparent;
+  }
+
+  .app-terminal {
+    @apply rounded-2xl border border-slate-800/80 bg-[#0b1220] font-mono text-[12px] text-emerald-100 shadow-inner;
+    box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.04), 0 20px 40px -28px rgb(15 23 42 / 0.65);
+  }
+
+  .app-pulse-dot {
+    @apply relative inline-flex h-2 w-2 rounded-full;
+  }
+
+  .app-pulse-dot::after {
+    content: "";
+    @apply absolute inset-0 rounded-full animate-ping opacity-75;
+    background: currentColor;
+  }
+
+  .premium-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: rgb(148 163 184) transparent;
+  }
+
+  .premium-scrollbar::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  .premium-scrollbar::-webkit-scrollbar-thumb {
+    background: rgb(203 213 225);
+    border-radius: 999px;
+  }
+
+  .login-panel {
+    background:
+      radial-gradient(circle at 20% 20%, rgb(45 212 191 / 0.18), transparent 34%),
+      radial-gradient(circle at 80% 0%, rgb(129 140 248 / 0.22), transparent 30%),
+      linear-gradient(160deg, #0f172a 0%, #134e4a 52%, #1e1b4b 100%);
+  }
+}
+
+@layer utilities {
+  .animate-fade-in {
+    animation: fade-in 0.35s ease-out both;
+  }
+
+  .animate-slide-up {
+    animation: slide-up 0.4s ease-out both;
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
