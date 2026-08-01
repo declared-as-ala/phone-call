@@ -1,0 +1,3 @@
+# Local overrides (URLs only—still keep out of commits if workspace policy requires)
+.env.local
+.env.*.local

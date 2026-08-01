@@ -1,0 +1,39 @@
+IVR Dashboard — Windows 10 (zip client COMPLET avec LuvVoice)
+=============================================================
+
+SUR TON MAC — creer le zip AVEC .env (LuvVoice, SIP, etc.) :
+
+  bash scripts/package-for-client-full.sh
+
+  --> ivr-dashboard-full-YYYYMMDD.zip
+  (contient backend\.env — ne pas publier sur internet)
+
+SUR LE PC CLIENT — apres unzip dans C:\ivr-project :
+
+1) Installer Python 3.10+ et Node.js 18+ (une fois)
+
+2) Une commande :
+
+   C:\ivr-project\scripts\windows\install-all.cmd
+
+   (garde backend\.env du zip — affiche "LuvVoice configure: True")
+
+3) Compte admin (une fois) :
+
+   cd C:\ivr-project\backend
+   .venv\Scripts\activate.bat
+   python scripts\create_admin.py --email admin@client.com --password "ChangeMe123!"
+
+4) Demarrer :
+
+   scripts\windows\start-backend.cmd
+   scripts\windows\start-frontend.cmd
+
+5) Navigateur : http://localhost:5173
+
+Si "API token not set" :
+  - Le zip etait SANS .env (mauvais script zip) — refaire avec package-for-client-full.sh
+  - Ou backend pas redemarre apres unzip — fermer fenetre backend et relancer start-backend.cmd
+
+Changer voix LuvVoice dans l'app : choix sauvegarde en cookie navigateur (normal).
+Token LuvVoice : dans backend\.env du zip (LUVVOICE_API_TOKEN).

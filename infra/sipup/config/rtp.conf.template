@@ -1,0 +1,15 @@
+; RTP for Docker NAT — rendered from ASTERISK_EXTERNAL_IP (see scripts/render_pjsip_from_env.sh)
+
+[general]
+rtpstart=10000
+rtpend=10100
+externaddr=REPLACE_ASTERISK_EXTERNAL_IP
+; Allow asymmetric RTP during NAT troubleshooting (Docker → PSTN).
+strictrtp=no
+; ICE is optional; most SIP trunks ignore ICE candidates and only use SDP c=/m= lines.
+; Enable only if you control both sides. Default off for SIP UP + Docker Desktop.
+icesupport=no
+; stunaddr=stun.l.google.com:19302
+localnet=10.0.0.0/8
+localnet=172.16.0.0/12
+localnet=192.168.0.0/16

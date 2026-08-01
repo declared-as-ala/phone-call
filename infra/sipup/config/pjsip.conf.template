@@ -1,0 +1,128 @@
+; Copy to pjsip.conf — PJSIP transport + softphone endpoint.
+; Replace REPLACE_* placeholders and secrets before use. Do not commit real credentials.
+;
+; Suggested env mapping (document in your secrets store, not in git):
+;   ASTERISK_SIP_DOMAIN      — often your LAN IP or "sip_up" docker hostname for LAN-only
+;   ASTERISK_ENDPOINT        — logical name, e.g. softphone1
+;   ASTERISK_SIP_USER        — SIP auth username
+;   ASTERISK_SIP_PASSWORD    — SIP password (strong random)
+;
+; SIP UP trunk placeholders (see infra/sipup/.env.example):
+;   SIPUP_SIP_DOMAIN, SIPUP_SIP_USERNAME, SIPUP_SIP_PASSWORD, SIPUP_OUTBOUND_CALLER_ID
+;
+; Asterisk does not read this .example file directly. Copy it to pjsip.conf
+; and render ${...} placeholders from your local .env/secrets store, for example
+; with envsubst. Never commit the rendered pjsip.conf if it contains secrets.
+
+[global]
+type = global
+user_agent = Asterisk-IVR-Dev
+
+[transport-udp]
+type = transport
+protocol = udp
+bind = 0.0.0.0:5060
+; Required for Docker → PSTN audio (rendered from ASTERISK_EXTERNAL_IP in infra/sipup/.env)
+external_media_address = REPLACE_ASTERISK_EXTERNAL_IP
+external_signaling_address = REPLACE_ASTERISK_EXTERNAL_IP
+local_net = 10.0.0.0/8
+local_net = 172.16.0.0/12
+local_net = 192.168.0.0/16
+
+[transport-tcp]
+type = transport
+protocol = tcp
+bind = 0.0.0.0:5060
+
+[transport-tls]
+type = transport
+protocol = tls
+bind = 0.0.0.0:5061
+method = tlsv1_2
+verify_server = no
+verify_client = no
+; --- Softphone registration (Zoiper / Linphone) ----------------------------
+
+[softphone-auth]
+type = auth
+auth_type = userpass
+password = REPLACE_SIP_PASSWORD
+username = REPLACE_SIP_USER
+
+[softphone-aor]
+type = aor
+max_contacts = 1
+remove_existing = yes
+
+[softphone-endpoint]
+type = endpoint
+context = ivr-local-dev
+disallow = all
+allow = ulaw,alaw,g722
+auth = softphone-auth
+aors = softphone-aor
+direct_media = no
+rtp_symmetric = yes
+force_rport = yes
+rewrite_contact = yes
+ice_support = no
+dtmf_mode = info
+; Optional: tie ARI channel variables to your app call_id via Stasis — see README.
+
+; --- SIP UP provider (UDP trunk) --------------------------------------------
+; Render REPLACE_SIPUP_* from local env (never commit secrets). Backend ARI
+; uses SIPUP_PJSIP_ENDPOINT=sip-up-trunk to match the endpoint name below.
+; G.729 requires a licensed codec module in Asterisk; ulaw/alaw work out of the box.
+
+[sip-up-auth]
+type = auth
+auth_type = userpass
+username = REPLACE_SIPUP_SIP_USERNAME
+password = REPLACE_SIPUP_SIP_PASSWORD
+
+[sip-up-aor]
+type = aor
+contact = REPLACE_SIPUP_AOR_CONTACT
+
+[sip-up-registration]
+type = registration
+transport = transport-udp
+outbound_auth = sip-up-auth
+server_uri = REPLACE_SIPUP_SERVER_URI
+client_uri = REPLACE_SIPUP_CLIENT_URI
+contact_user = REPLACE_SIPUP_SIP_USERNAME
+retry_interval = 60
+forbidden_retry_interval = 300
+expiration = 3600
+
+[sip-up-identify]
+type = identify
+endpoint = sip-up-trunk
+match = REPLACE_SIPUP_IDENTIFY_MATCH
+
+[sip-up-trunk]
+type = endpoint
+transport = transport-udp
+context = ivr-outbound
+disallow = all
+; PCM only — g729 breaks inband DTMF fallback and adds codec-negotiation risk on trunks.
+allow = ulaw,alaw
+aors = sip-up-aor
+outbound_auth = sip-up-auth
+from_domain = REPLACE_SIPUP_FROM_DOMAIN
+from_user = REPLACE_SIPUP_SIP_USERNAME
+callerid = REPLACE_SIPUP_OUTBOUND_CALLER_ID
+; SIP UP (PSTN) sends keypad digits as RFC4733 telephone-event in RTP. Requires inbound RTP
+; (Receive Count > 0 in pjsip show channelstats). Set SIPUP_DTMF_MODE=info only if the provider
+; confirms SIP INFO DTMF — most trunks are RFC4733-only.
+dtmf_mode = REPLACE_SIPUP_DTMF_MODE
+direct_media = no
+rtp_symmetric = yes
+force_rport = yes
+rewrite_contact = yes
+; ICE rarely helps SIP trunks (they ignore candidates); keep off to avoid odd SDP.
+ice_support = no
+trust_id_inbound = yes
+send_pai = yes
+rtp_keepalive = 15
+media_use_received_transport = yes
